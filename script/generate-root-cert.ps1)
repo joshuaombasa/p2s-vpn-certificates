@@ -1,0 +1,13 @@
+# scripts/generate-root-cert.ps1
+
+# Create the Root Certificate
+$rootCert = New-SelfSignedCertificate -Type Custom -KeySpec Signature `
+-Subject "CN=VPNRoot" -KeyExportPolicy Exportable `
+-HashAlgorithm sha256 -KeyLength 2048 `
+-CertStoreLocation "Cert:\CurrentUser\My" -KeyUsageProperty Sign -KeyUsage CertSign
+
+# Export the root certificate (without private key) for Azure VPN Gateway
+$certPath = "$env:USERPROFILE\Desktop\VPNRootCert.cer"
+Export-Certificate -Cert $rootCert -FilePath $certPath
+
+Write-Host "Root certificate generated and exported to $certPath"
